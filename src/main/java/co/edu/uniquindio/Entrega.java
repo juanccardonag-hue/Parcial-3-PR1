@@ -8,16 +8,16 @@ public class Entrega {
     private LocalDate fecha;
     private Aportante aportante;
     private  EstadoEntrega estado;
-    private List<Lote> lotes;
+    private List<Lote> lotes = new ArrayList<>();
     private Comprobante comprobante;
 
-    public Entrega(String codigo, LocalDate fecha, Aportante aportante, EstadoEntrega estado, List<Lote> lotes, Comprobante comprobante) {
+    public Entrega(String codigo, Aportante aportante) {
         this.codigo = codigo;
-        this.fecha = fecha;
+        this.fecha = LocalDate.now();
         this.aportante = aportante;
-        this.estado = estado;
-        this.lotes = lotes;
-        this.comprobante = comprobante;
+        this.estado = EstadoEntrega.ABIERTA;
+        this.lotes = new ArrayList<>();
+        this.comprobante = null;
     }
 
     public String getCodigo() {return codigo;}
@@ -37,4 +37,5 @@ public class Entrega {
 
     public Comprobante getComprobante() {return comprobante;}
     public void setComprobante(Comprobante comprobante) {this.comprobante = comprobante;}
-}
+
+    }
