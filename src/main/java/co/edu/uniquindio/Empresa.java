@@ -1,9 +1,11 @@
 package co.edu.uniquindio;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Empresa {
-    private  String nit;
+    private String nit;
     private String nombre;
     private List<Aportante> aportantes;
     private List<Entrega> entregas;
@@ -47,15 +49,15 @@ public class Empresa {
         return null;
     }
 
-    public boolean registrarEntrega(String codigo, String idAportante) {
-        if (codigo == null || codigo.trim().isEmpty() || buscarEntrega(codigo) != null) {
+    public boolean registrarEntrega(String codigo, LocalDate fecha, String idAportante) {
+        if (codigo == null || codigo.trim().isEmpty() || fecha == null || buscarEntrega(codigo) != null) {
             return false;
         }
         Aportante ap = buscarAportante(idAportante);
         if (ap == null) {
             return false;
         }
-        entregas.add(new Entrega(codigo.trim(), ap));
+        entregas.add(new Entrega(codigo.trim(), fecha, ap));
         return true;
     }
 
@@ -73,15 +75,15 @@ public class Empresa {
         return acumulado;
     }
 
-    public String getNit() {return nit;}
-    public void setNit(String nit) {this.nit = nit;}
+    public String getNit() { return nit; }
+    public void setNit(String nit) { this.nit = nit; }
 
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public List<Aportante> getAportantes() {return aportantes;}
-    public void setAportantes(List<Aportante> aportantes) {this.aportantes = aportantes;}
+    public List<Aportante> getAportantes() { return aportantes; }
+    public void setAportantes(List<Aportante> aportantes) { this.aportantes = aportantes; }
 
-    public List<Entrega> getEntregas() {return entregas;}
-    public void setEntregas(List<Entrega> entregas) {this.entregas = entregas;}
+    public List<Entrega> getEntregas() { return entregas; }
+    public void setEntregas(List<Entrega> entregas) { this.entregas = entregas; }
 }

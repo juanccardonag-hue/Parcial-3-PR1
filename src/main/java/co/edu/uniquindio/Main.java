@@ -1,6 +1,7 @@
 package co.edu.uniquindio;
 
 import javax.swing.JOptionPane;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
@@ -86,17 +87,38 @@ public class Main {
             return;
         }
 
-        String codigo = JOptionPane.showInputDialog("Ingrese el código de la nueva entrega");
+        String codigo = JOptionPane.showInputDialog("Ingrese el código de la nueva entrega:");
         if (codigo == null || codigo.trim().isEmpty()) return;
 
-        if (ecoRuta.registrarEntrega(codigo, id)) {
-            JOptionPane.showMessageDialog(null, "Entrega '" + codigo.trim() + "' creada en estado ABIERTA.");
+        String anioStr = JOptionPane.showInputDialog("Ingrese el año de la entrega (ej: 2026):");
+        if (anioStr == null || anioStr.trim().isEmpty()) return;
+
+        String mesStr = JOptionPane.showInputDialog("Ingrese el mes de la entrega (1 al 12):");
+        if (mesStr == null || mesStr.trim().isEmpty()) return;
+
+        String diaStr = JOptionPane.showInputDialog("Ingrese el día de la entrega (1 al 31):");
+        if (diaStr == null || diaStr.trim().isEmpty()) return;
+
+        LocalDate fecha = null;
+        try {
+            int anio = Integer.parseInt(anioStr.trim());
+            int mes = Integer.parseInt(mesStr.trim());
+            int dia = Integer.parseInt(diaStr.trim());
+            fecha = LocalDate.of(anio, mes, dia);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "⚠ Error: Fecha inválida. Verifique el año, mes y día ⚠", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (ecoRuta.registrarEntrega(codigo, fecha, id)) {
+            JOptionPane.showMessageDialog(null, "Entrega '" + codigo.trim() + "' creada con fecha " + fecha + " en estado ABIERTA.");
         } else {
             JOptionPane.showMessageDialog(null, "⚠ Error: El código de entrega '" + codigo + "' ya existe ⚠", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private static void agregarLoteMenu() {
-        String codEntrega = JOptionPane.showInputDialog("Ingrese código de la entrega");
+        String codEntrega = JOptionPane.showInputDialog("Ingrese código de la entrega:");
         if (codEntrega == null || codEntrega.trim().isEmpty()) return;
 
         Entrega entrega = ecoRuta.buscarEntrega(codEntrega);
@@ -120,11 +142,11 @@ public class Main {
         String tipo = JOptionPane.showInputDialog(null, menuTipo, "Tipo Lote", JOptionPane.QUESTION_MESSAGE);
         if (tipo == null || tipo.trim().isEmpty()) return;
 
-        String codLote = JOptionPane.showInputDialog("Ingrese Código del lote ");
+        String codLote = JOptionPane.showInputDialog("Ingrese Código del lote:");
         if (codLote == null || codLote.trim().isEmpty()) return;
 
         if (entrega.buscarLote(codLote) != null) {
-            JOptionPane.showMessageDialog(null, "Error: El lote '" + codLote + "' ya existe en la entrega '" + codEntrega + "'. Use otro código.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "⚠ Error: El lote '" + codLote + "' ya existe en la entrega '" + codEntrega + "'. Use otro código ⚠", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -224,7 +246,7 @@ public class Main {
         Entrega entrega = ecoRuta.buscarEntrega(codEntrega);
 
         if (entrega == null) {
-            JOptionPane.showMessageDialog(null, "Error: Entrega no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "⚠ Error: Entrega no encontrada ⚠", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -245,16 +267,16 @@ public class Main {
         if (id == null || id.trim().isEmpty()) return;
 
         if (ecoRuta.buscarAportante(id) == null) {
-            JOptionPane.showMessageDialog(null, "Error: Aportante con cédula '" + id + "' no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "⚠ Error: Aportante con cédula '" + id + "' no existe ⚠", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         double total = ecoRuta.consultarValorAcumuladoAportante(id);
-        JOptionPane.showMessageDialog(null, "Valor acumulado en entregas ACEPTADAS para la cédula" + id + ": $" + total);
+        JOptionPane.showMessageDialog(null, "Valor acumulado en entregas ACEPTADAS para la cédula " + id + ": $" + total);
     }
 
     private static void listarRegistrosMenu() {
-        String mensage = "°°°APORTANTES REGISTRADOS °°°\n";
+        String mensage = "°°° APORTANTES REGISTRADOS °°°\n";
         for (Aportante a : ecoRuta.getAportantes()) {
             mensage = mensage + "• ID: " + a.cedula() + " | Nombre: " + a.nombre() + "\n";
         }
@@ -264,7 +286,8 @@ public class Main {
             mensage = mensage + "(Sin entregas)\n";
         } else {
             for (Entrega e : ecoRuta.getEntregas()) {
-                mensage = mensage + "• Código: " + e.getCodigo() + " • Aportante: " + e.getAportante().cedula()
+                mensage = mensage + "• Código: " + e.getCodigo() + " • Fecha: " + e.getFecha()
+                        + " • Aportante: " + e.getAportante().cedula()
                         + " • Estado: " + e.getEstado() + " • Cant. Lotes: " + e.getLotes().size() + "\n";
             }
         }
