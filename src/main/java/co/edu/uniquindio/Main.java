@@ -157,8 +157,18 @@ public class Main {
             case "2":
                 String menuMetal = "Tipo de Metal:\n1. Aluminio\n2. Acero\n\nDigite 1 o 2:";
                 String tmInput = JOptionPane.showInputDialog(null, menuMetal, "Metal", JOptionPane.QUESTION_MESSAGE);
-                if (tmInput == null) return;
-                TipoMetal tm = ("1".equals(tmInput.trim())) ? TipoMetal.ALUMINIO : TipoMetal.ACERO;
+                if (tmInput == null || tmInput.trim().isEmpty()) return;
+
+                TipoMetal tm = null;
+                if (tmInput.trim().equals("1")) {
+                    tm = TipoMetal.ALUMINIO;
+                } else if (tmInput.trim().equals("2")) {
+                    tm = TipoMetal.ACERO;
+                } else {
+                    JOptionPane.showMessageDialog(null, "⚠ Error: Opción de metal inválida ⚠", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 lote = new Metal(codLote, desc, peso, tm);
                 break;
             case "3":
