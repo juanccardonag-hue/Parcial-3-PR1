@@ -180,7 +180,6 @@ public class Main {
                 String menuMetal = "Tipo de Metal:\n1. Aluminio\n2. Acero\n\nDigite 1 o 2:";
                 String tmInput = JOptionPane.showInputDialog(null, menuMetal, "Metal", JOptionPane.QUESTION_MESSAGE);
                 if (tmInput == null || tmInput.trim().isEmpty()) return;
-
                 TipoMetal tm = null;
                 if (tmInput.trim().equals("1")) {
                     tm = TipoMetal.ALUMINIO;
@@ -193,6 +192,7 @@ public class Main {
 
                 lote = new Metal(codLote, desc, peso, tm);
                 break;
+
             case "3":
                 String eqStr = JOptionPane.showInputDialog("Cantidad de equipos completos:");
                 if (eqStr == null || eqStr.trim().isEmpty()) return;
