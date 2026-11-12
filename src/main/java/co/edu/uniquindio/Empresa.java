@@ -14,22 +14,10 @@ public class Empresa {
         this.aportantes = new ArrayList<>();
         this.entregas = new ArrayList<>();
 
-        // Datos quemados para realizar pruebas desde el menú interactivo
+        // Datos quemados para realizar pruebas desde el menú
         this.aportantes.add(new Aportante("109555", "Juan Cardona", "juan@mail.com"));
         this.aportantes.add(new Aportante("109245", "Mariana Mendez", "mariana@mail.com"));
     }
-
-    public String getNit() {return nit;}
-    public void setNit(String nit) {this.nit = nit;}
-
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
-
-    public List<Aportante> getAportantes() {return aportantes;}
-    public void setAportantes(List<Aportante> aportantes) {this.aportantes = aportantes;}
-
-    public List<Entrega> getEntregas() {return entregas;}
-    public void setEntregas(List<Entrega> entregas) {this.entregas = entregas;}
 
     public Aportante buscarAportante(String id) {
         if (id == null) return null;
@@ -84,4 +72,16 @@ public class Empresa {
         }
         return acumulado;
     }
+
+    public String getNit() {return nit;}
+    public void setNit(String nit) {this.nit = nit;}
+
+    public String getNombre() {return nombre;}
+    public void setNombre(String nombre) {this.nombre = nombre;}
+
+    public List<Aportante> getAportantes() {return aportantes;}
+    public void setAportantes(List<Aportante> aportantes) {this.aportantes = aportantes;}
+
+    public List<Entrega> getEntregas() {return entregas;}
+    public void setEntregas(List<Entrega> entregas) {this.entregas = entregas;}
 }
