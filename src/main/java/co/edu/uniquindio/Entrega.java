@@ -19,6 +19,68 @@ public class Entrega {
         this.lotes = new ArrayList<>();
         this.comprobante = null;
     }
+    public Lote buscarLote(String codigoLote) {
+        if (codigoLote == null || this.lotes == null) {
+            return null;
+        }
+        for (Lote l : lotes) {
+            if (l.getCodigo().trim().equalsIgnoreCase(codigoLote.trim())) {
+                return l;
+            }
+        }
+        return null;
+    }
+
+    public boolean agregarLote(Lote nuevoLote) {
+        if (this.estado != EstadoEntrega.ABIERTA) {
+            return false;
+        }
+        if (nuevoLote == null || nuevoLote.getPesoKg() <= 0) {
+            return false;
+        }
+        if (buscarLote(nuevoLote.getCodigo()) != null) {
+            return false;
+        }
+        return lotes.add(nuevoLote);
+    }
+
+    public boolean aceptarEntrega() {
+        if (this.estado != EstadoEntrega.ABIERTA || lotes.isEmpty()) {
+            return false;
+        }
+        this.estado = EstadoEntrega.ACEPTADA;
+        int pesoTotal = calcularPesoTotal();
+        double valorTotal = calcularValorTotal();
+        this.comprobante = new Comprobante(this.codigo, this.aportante.cedula(), pesoTotal, valorTotal);
+        return true;
+    }
+
+    public int calcularPesoTotal() {
+        int total = 0;
+        for (Lote l : lotes) {
+            total += l.getPesoKg();
+        }
+        return total;
+    }
+
+    public double calcularValorTotal() {
+        double total = 0.0;
+        for (Lote l : lotes) {
+            total += l.calcularValor();
+        }
+        return total;
+    }
+
+    public List<String> obtenerEtiquetas() {
+        List<String> etiquetas = new ArrayList<>();
+        for (Lote l : lotes) {
+            if (l instanceof Etiquetable) {
+                Etiquetable e = (Etiquetable) l;
+                etiquetas.add(e.generarEtiqueta());
+            }
+        }
+        return etiquetas;
+    }
 
     public String getCodigo() {return codigo;}
     public void setCodigo(String codigo) {this.codigo = codigo;}
