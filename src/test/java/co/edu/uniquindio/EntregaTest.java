@@ -42,4 +42,63 @@ class EntregaTest {
 
         LOG.info("Finalizando prueba: Validación de Lotes al Agregar");
     }
+
+    /* Rechaza la aceptacion de una entrega sin lote */
+    @Test
+    @DisplayName("Prueba: Rechazo de Entrega Vacía")
+    void testRechazoEntregaVacia() {
+        LOG.info("Iniciando prueba: Rechazo de Entrega Vacía");
+
+        boolean aceptada = entrega.aceptarEntrega();
+
+        assertFalse(aceptada);
+        assertEquals(EstadoEntrega.ABIERTA, entrega.getEstado());
+        assertNull(entrega.getComprobante());
+
+        LOG.info("Finalizando prueba: Rechazo de Entrega Vacía");
+    }
+
+    /* Calcula el valor por tipo de lote, acepta entrega y genera comprobante*/
+    @Test
+    @DisplayName("Prueba: Aceptación y Cálculo de Tres Lotes")
+    void testAceptacionYCalculoTresLotes() {
+        LOG.info("Iniciando prueba: Aceptación y Cálculo de Tres Lotes");
+
+        entrega.agregarLote(lotes.get(0));
+        entrega.agregarLote(lotes.get(1));
+        entrega.agregarLote(lotes.get(2));
+
+        assertEquals(6000.0, lotes.get(0).calcularValor());
+        assertEquals(11000.0, lotes.get(1).calcularValor());
+        assertEquals(7200.0, lotes.get(2).calcularValor());
+
+        boolean aceptada = entrega.aceptarEntrega();
+
+        assertTrue(aceptada);
+        assertEquals(EstadoEntrega.ACEPTADA, entrega.getEstado());
+        assertNotNull(entrega.getComprobante());
+        assertEquals(19, entrega.getComprobante().pesoTotal());
+        assertEquals(24200.0, entrega.getComprobante().valorTotal());
+
+        LOG.info("Finalizando prueba: Aceptación y Cálculo de Tres Lotes");
+    }
+
+    /* Esta es para las etiquetes de los lotes que se pueden etiquetar */
+    @Test
+    @DisplayName("Prueba: Consulta de Etiquetas")
+    void testConsultaEtiquetas() {
+        LOG.info("Iniciando prueba: Consulta de Etiquetas");
+
+        entrega.agregarLote(lotes.get(0));
+        entrega.agregarLote(lotes.get(1));
+        entrega.agregarLote(lotes.get(2));
+
+        List<String> etiquetas = entrega.obtenerEtiquetas();
+
+        assertEquals(2, etiquetas.size());
+        assertTrue(etiquetas.get(0).contains("L11"));
+        assertTrue(etiquetas.get(1).contains("L12"));
+
+        LOG.info("Finalizando prueba: Consulta de Etiquetas");
+    }
 }
